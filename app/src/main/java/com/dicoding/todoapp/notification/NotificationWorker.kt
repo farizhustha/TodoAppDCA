@@ -4,7 +4,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
@@ -64,7 +63,7 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
             DateConverter.convertMillisToString(task.dueDateMillis)
         )
         val notificationManager =
-            applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notifications)
             .setContentTitle(task.title)
@@ -76,11 +75,11 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
                 NotificationChannel(
                     NOTIFICATION_CHANNEL_ID,
                     channelName,
-                    NotificationManager.IMPORTANCE_HIGH
+                    NotificationManager.IMPORTANCE_DEFAULT
                 )
             notification.setChannelId(NOTIFICATION_CHANNEL_ID)
             notificationManager.createNotificationChannel(channel)
         }
-        notificationManager.notify(1, notification.build())
+        notificationManager.notify(task.id, notification.build())
     }
 }
